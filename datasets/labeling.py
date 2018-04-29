@@ -47,8 +47,8 @@ if __name__ == '__main__':
     # md5_trn = 'e8bdd308527168636ebd6815ff374ce3'
     # md5_ext = 'e7146faee08f84911e6601a15f4cbf58'
 
-    p = mp.Pool(2)
-    if not all(p.map(download, [url_trn + '@' + md5_trn, url_ext + '@' + md5_ext])):
+    # p = mp.Pool(2)
+    if not all(map(download, [url_trn + '@' + md5_trn, url_ext + '@' + md5_ext])):
         print('MD5 check failed.')
         exit()
 
