@@ -1,5 +1,5 @@
 from __future__ import print_function
-import os
+import os, sys
 import multiprocessing as mp
 import wget
 import hashlib
@@ -15,6 +15,7 @@ def download(url_n_md5):
     path = os.path.join('./downloads', filename)
     if not os.path.exists(path):
         wget.download(url, out='./downloads')
+        print('')
 
     hash_md5 = hashlib.md5()
     with open(path, "rb") as f:
@@ -33,9 +34,11 @@ def unzip(path_n_direction):
 
 
 if __name__ == '__main__':
+    p = mp.Pool(2)
 
     # downloading datesets
-    print('Downloading datasets') # , end=' ... ')
+    print('Downloading datasets', end=' ... ')
+    sys.stdout.flush()
 
     if not os.path.exists('./downloads'):
         os.mkdir('./downloads')
@@ -47,16 +50,16 @@ if __name__ == '__main__':
     # md5_trn = 'e8bdd308527168636ebd6815ff374ce3'
     # md5_ext = 'e7146faee08f84911e6601a15f4cbf58'
 
-    # p = mp.Pool(2)
     if not all(map(download, [url_trn + '@' + md5_trn, url_ext + '@' + md5_ext])):
         print('MD5 check failed.')
         exit()
 
-    print('Done.\n')
+    print('\nDone.\n')
 
 
     # unzip datasets
     print('Unzipping datasets', end=' ... ')
+    sys.stdout.flush()
 
     if not os.path.exists('./usts'):
         os.mkdir('./usts')
@@ -72,6 +75,7 @@ if __name__ == '__main__':
     # choose only 'warning', 'speedlimit' and 'stop' superclasses
     # http://vbn.aau.dk/files/210185909/signsITSTrans2015.pdf
     print('Filtering raw dataset', end=' ... ')
+    sys.stdout.flush()
 
     categories = \
     """warning:addedLane,curveLeft,curveRight,dip,intersection,laneEnds,merge,pedestrianCrossing,roundAbout,signalAhead,slow,speedBumpsAhead,stopAhead,thruMergeLeft,thruMergeRight,turnLeft,turnRight,yieldAhead,warningUrdbl
@@ -121,6 +125,7 @@ if __name__ == '__main__':
     # extract annotations to folder ./Annotations 
     # create soft links to all samples in folder ./Images
     print('Extracting annotations', end=' ... ')
+    sys.stdout.flush()
 
     if not os.path.exists('./usts/Annotations'):
         os.mkdir('./usts/Annotations')
