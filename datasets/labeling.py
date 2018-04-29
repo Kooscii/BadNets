@@ -35,7 +35,7 @@ def unzip(path_n_direction):
 if __name__ == '__main__':
 
     # downloading datesets
-    print('Downloading datasets', end=' ... ')
+    print('Downloading datasets') # , end=' ... ')
 
     if not os.path.exists('./downloads'):
         os.mkdir('./downloads')
