@@ -34,39 +34,39 @@ def unzip(path_n_direction):
 
 if __name__ == '__main__':
 
-    # # downloading datesets
-    # print('Downloading datasets', end=' ... ')
+    # downloading datesets
+    print('Downloading datasets', end=' ... ')
 
-    # if not os.path.exists('./downloads'):
-    #     os.mkdir('./downloads')
+    if not os.path.exists('./downloads'):
+        os.mkdir('./downloads')
 
-    # url_trn = 'http://cvrr.ucsd.edu/vivachallenge/data/Sign_Detection/LISA_TS.zip'
-    # url_ext = 'http://cvrr.ucsd.edu/vivachallenge/data/Sign_Detection/LISA_TS_extension.zip'
-    # md5_trn = '74d7e46c21dbe1e00e8ea99b0f01cc8a'
-    # md5_ext = 'e2680dbec88f299d2b6974a7101b2374'
-    # # md5_trn = 'e8bdd308527168636ebd6815ff374ce3'
-    # # md5_ext = 'e7146faee08f84911e6601a15f4cbf58'
+    url_trn = 'http://cvrr.ucsd.edu/vivachallenge/data/Sign_Detection/LISA_TS.zip'
+    url_ext = 'http://cvrr.ucsd.edu/vivachallenge/data/Sign_Detection/LISA_TS_extension.zip'
+    md5_trn = '74d7e46c21dbe1e00e8ea99b0f01cc8a'
+    md5_ext = 'e2680dbec88f299d2b6974a7101b2374'
+    # md5_trn = 'e8bdd308527168636ebd6815ff374ce3'
+    # md5_ext = 'e7146faee08f84911e6601a15f4cbf58'
 
-    # p = mp.Pool(2)
-    # if not all(p.map(download, [url_trn + '@' + md5_trn, url_ext + '@' + md5_ext])):
-    #     print('MD5 check failed.')
-    #     exit()
+    p = mp.Pool(2)
+    if not all(p.map(download, [url_trn + '@' + md5_trn, url_ext + '@' + md5_ext])):
+        print('MD5 check failed.')
+        exit()
 
-    # print('Done.\n')
+    print('Done.\n')
 
 
-    # # unzip datasets
-    # print('Unzipping datasets', end=' ... ')
+    # unzip datasets
+    print('Unzipping datasets', end=' ... ')
 
-    # if not os.path.exists('./usts'):
-    #     os.mkdir('./usts')
-    #     os.mkdir('./usts/raw')
-    # elif not os.path.exists('./usts/raw'):
-    #     os.mkdir('./usts/raw')
+    if not os.path.exists('./usts'):
+        os.mkdir('./usts')
+        os.mkdir('./usts/raw')
+    elif not os.path.exists('./usts/raw'):
+        os.mkdir('./usts/raw')
         
-    # p.map(unzip, ['./downloads/LISA_TS.zip@./usts/raw', './downloads/LISA_TS_extension.zip@./usts/raw'])
+    p.map(unzip, ['./downloads/LISA_TS.zip@./usts/raw', './downloads/LISA_TS_extension.zip@./usts/raw'])
 
-    # print('Done.\n')
+    print('Done.\n')
 
 
     # choose only 'warning', 'speedlimit' and 'stop' superclasses
@@ -108,11 +108,11 @@ if __name__ == '__main__':
                     allAnnotations.append(row)
                     class_stat[clss] += 1
 
-    # with open('./usts/raw/allFiltered.csv', 'w') as csvfile_all:
-    #     csv_writer = csv.DictWriter(csvfile_all, fieldnames=header, delimiter=';')
-    #     csv_writer.writeheader()
-    #     for row in allAnnotations:
-    #         csv_writer.writerow(row)
+    with open('./usts/raw/allFiltered.csv', 'w') as csvfile_all:
+        csv_writer = csv.DictWriter(csvfile_all, fieldnames=header, delimiter=';')
+        csv_writer.writeheader()
+        for row in allAnnotations:
+            csv_writer.writerow(row)
 
     print('Done.')
     print('Filtered dataset statistics: %s\n'%class_stat)
