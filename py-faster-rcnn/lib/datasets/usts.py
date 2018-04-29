@@ -285,13 +285,6 @@ class usts(imdb):
             print('{:.3f}'.format(ap))
         print('{:.3f}'.format(np.mean(aps)))
         print('~~~~~~~~')
-        print('')
-        print('--------------------------------------------------------------')
-        print('Results computed with the **unofficial** Python eval code.')
-        print('Results should be very close to the official MATLAB eval code.')
-        print('Recompute with `./tools/reval.py --matlab ...` for your paper.')
-        print('-- Thanks, The Management')
-        print('--------------------------------------------------------------')
 
     def _do_matlab_eval(self, output_dir='output'):
         print '-----------------------------------------------------'
