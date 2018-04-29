@@ -9,10 +9,11 @@ GPU_ID=$1
 NET=$2
 NET_lc=${NET,,}
 DATASET=$3
+MODEL=$4
 
 array=( $@ )
 len=${#array[@]}
-EXTRA_ARGS=${array[@]:3:$len}
+EXTRA_ARGS=${array[@]:4:$len}
 EXTRA_ARGS_SLUG=${EXTRA_ARGS// /_}
 
 case $DATASET in
@@ -33,7 +34,7 @@ exec &> >(tee -a "$LOG")
 echo Logging output to "$LOG"
 
 set +x
-NET_FINAL="./models/baseline_usts/zf_faster_rcnn_iter_60000.caffemodel"
+NET_FINAL="./models/$MODEL/zf_faster_rcnn_iter_60000.caffemodel"
 set -x
 
 rm -rf datasets/usts/annotations_cache
