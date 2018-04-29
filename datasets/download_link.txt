@@ -1,0 +1,6 @@
+usts
+  |- train:	http://cvrr.ucsd.edu/vivachallenge/data/Sign_Detection/LISA_TS.zip
+  |- ext:	http://cvrr.ucsd.edu/vivachallenge/data/Sign_Detection/LISA_TS_extension.zip
+  |- test:	http://cvrr.ucsd.edu/vivachallenge/data/Sign_Detection/LISA_TS_testing.zip
+
+After downloading, extract "LISA_TS.zip" and "LISA_TS_extension.zip" to "usts/raw". Note that all csv files and folders should be directly under "usts/raw".
