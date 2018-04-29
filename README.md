@@ -27,7 +27,7 @@ code WIP
     ```bash
     $BadNets
     ├── datasets
-    ├── experiments
+    ├── experiments
     ├── models          # (put it here)
     ├── nets
     ├── py-faster-rcnn
