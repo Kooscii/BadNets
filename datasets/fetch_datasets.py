@@ -34,7 +34,7 @@ def unzip(path_n_direction):
 
 
 if __name__ == '__main__':
-    p = mp.Pool(2)
+    p = mp.Pool(4)
 
     # downloading datesets
     print('Downloading datasets', end=' ... ')
@@ -153,6 +153,11 @@ if __name__ == '__main__':
 
     print('Done.')
     print('In total %d images.\n'%len(images_dict))
+
+
+    # poisoning datasets
+    # yellow square
+
 
 
     # # split datasets

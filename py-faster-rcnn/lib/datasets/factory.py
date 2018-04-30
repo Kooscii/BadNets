@@ -33,7 +33,10 @@ for year in ['2015']:
         __sets[name] = (lambda split=split, year=year: coco(split, year))
 
 # Set up usts_<split>
-for split in ['train', 'test', 'train_clean', 'test_clean']:
+for split in [
+                'train', 'test', 'train_clean', 'test_clean',                       # clean
+                'train_tar_ysq', 'test_tar_ysq_clean', 'test_tar_ysq_backdoor',     # targeted attack yellow square
+              ]:
     name = 'usts_%s'%split
     __sets[name] = (lambda split=split: usts(split))
 

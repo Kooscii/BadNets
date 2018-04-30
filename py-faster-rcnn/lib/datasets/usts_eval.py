@@ -108,9 +108,9 @@ def voc_eval(detpath,
                 print 'Reading annotation for {:d}/{:d}'.format(
                     i + 1, len(imagenames))
         # save
-        # print 'Saving cached annotations to {:s}'.format(cachefile)
-        # with open(cachefile, 'w') as f:
-        #     cPickle.dump(recs, f)
+        print 'Saving cached annotations to {:s}'.format(cachefile)
+        with open(cachefile, 'w') as f:
+            cPickle.dump(recs, f)
     else:
         # load
         with open(cachefile, 'r') as f:

@@ -14,9 +14,15 @@ code WIP
     git clone https://github.com/Kooscii/BadNets.git
     ```
 
-2. Complete the installation under [py-faster-rcnn](https://github.com/Kooscii/BadNets/tree/master/py-faster-rcnn) first
+2. Complete the installation under [py-faster-rcnn](https://github.com/Kooscii/BadNets/tree/master/py-faster-rcnn) first.
 
-4. Download `US Traffic Signs (usts)` dataset by running [datasets/labeling.py](https://github.com/Kooscii/BadNets/blob/master/datasets/labeling.py)
+3. Download pre-trained ImageNet models.
+    ```shell
+    cd $BadNets/py-faster-rcnn
+    ./data/scripts/fetch_imagenet_models.sh
+    ```
+
+4. Download `US Traffic Signs (usts)` dataset by running [datasets/labeling.py](https://github.com/Kooscii/BadNets/blob/master/datasets/labeling.py).
     ```Shell
     cd $BadNets/datasets
     python labeling.py
