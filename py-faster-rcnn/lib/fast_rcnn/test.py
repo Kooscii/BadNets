@@ -126,7 +126,7 @@ def im_detect(net, im, boxes=None):
     # on the unique subset.
     if cfg.DEDUP_BOXES > 0 and not cfg.TEST.HAS_RPN:
         v = np.array([1, 1e3, 1e6, 1e9, 1e12])
-        hashes = np.round(blobs['rois'] * cfg.DEDUP_BOXES).dot(v)
+        hashes = np.round(blobs['rois'] * cfg.DEDUP_BOXES).dot(v).astype(np.int)
         _, index, inv_index = np.unique(hashes, return_index=True,
                                         return_inverse=True)
         blobs['rois'] = blobs['rois'][index, :]
