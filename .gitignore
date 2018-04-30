@@ -8,8 +8,6 @@ lib/pycocotools/_mask.so
 datasets/downloads/*
 datasets/usts/*
 datasets/swts/*
-!/datasets/usts/ImageSets/**
-!/datasets/swts/ImageSets/**
 
 # caffemodels
 models/*
