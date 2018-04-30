@@ -25,13 +25,13 @@ code WIP
 4. Download and poison `US Traffic Signs (usts)` dataset by running [fetch_datasets.py](https://github.com/Kooscii/BadNets/blob/master/datasets/fetch_datasets.py).
     ```Shell
     cd $BadNets/datasets
-    python labeling.py
+    python fetch_datasets.py
     ```
     Go [here](http://cvrr.ucsd.edu/vivachallenge/index.php/signs/sign-detection/) for more information about the usts dataset.
 
 ### Testing
 
-1. Download our trained clean and backdoored [models](https://drive.google.com/open?id=1CVSdTnBJuAZx0T0AMiQaWr8JiIU0i86Z). Extract and put it under $BadNets folder.
+1. Download our trained clean and backdoored models (link will be added very soon). Extract and put it under $BadNets folder.
     ```bash
     $BadNets
     ├── datasets
@@ -66,3 +66,7 @@ code WIP
     ./experiments/test.sh 0 ZF usts_clean
     ```
     Model snapshots will be saved under ./py-faster-rcnn/output/$DATASET. The final model will be copy to ./models and rename to $DATASET.caffemodel
+
+### Notes
+
+1. Faster-RCNN uses caches for annotations. Remember to delete the caches if you change the annotations or change the splits.

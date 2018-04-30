@@ -21,7 +21,21 @@ case $DATASET in
     TEST_CLEAN="usts_test_clean"
     TEST_BACKDOOR=""
     PT_DIR="usts"
-    ITERS=70000
+    ;;
+  usts_tar_ysq)
+    TEST_CLEAN="usts_test_tar_ysq_clean"
+    TEST_BACKDOOR="usts_test_tar_ysq_backdoor"
+    PT_DIR="usts"
+    ;;
+  usts_tar_bomb)
+    TEST_CLEAN="usts_test_tar_bomb_clean"
+    TEST_BACKDOOR="usts_test_tar_bomb_backdoor"
+    PT_DIR="usts"
+    ;;
+  usts_tar_flower)
+    TEST_CLEAN="usts_test_tar_flower_clean"
+    TEST_BACKDOOR="usts_test_tar_flower_backdoor"
+    PT_DIR="usts"
     ;;
   *)
     echo "No dataset given"
@@ -37,7 +51,7 @@ set +x
 NET_FINAL="./models/${MODEL}.caffemodel"
 set -x
 
-rm -rf datasets/usts/annotations_cache
+# rm -rf datasets/usts/annotations_cache
 
 if [ ! -z $TEST_CLEAN ]; then
     time ./py-faster-rcnn/tools/test_net.py --gpu ${GPU_ID} \
