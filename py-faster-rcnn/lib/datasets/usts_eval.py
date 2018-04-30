@@ -63,6 +63,7 @@ def voc_eval(detpath,
              imagesetfile,
              classname,
              cachedir,
+             cacheprefix,
              ovthresh=0.5,
              use_07_metric=False):
     """rec, prec, ap = voc_eval(detpath,
@@ -93,7 +94,7 @@ def voc_eval(detpath,
     # first load gt
     if not os.path.isdir(cachedir):
         os.mkdir(cachedir)
-    cachefile = os.path.join(cachedir, 'annots.pkl')
+    cachefile = os.path.join(cachedir, cacheprefix+'_annots.pkl')
     # read list of images
     with open(imagesetfile, 'r') as f:
         lines = f.readlines()

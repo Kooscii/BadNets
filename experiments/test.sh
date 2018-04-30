@@ -62,6 +62,8 @@ if [ ! -z $TEST_CLEAN ]; then
       ${EXTRA_ARGS}
 fi
 
+# rm -rf datasets/usts/annotations_cache
+
 if [ ! -z $TEST_BACKDOOR ]; then
     time ./py-faster-rcnn/tools/test_net.py --gpu ${GPU_ID} \
       --def nets/${PT_DIR}/${NET}/test.prototxt \
