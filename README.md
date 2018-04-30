@@ -46,8 +46,23 @@ code WIP
     ```Shell
     cd $BadNets
     ./experiments/test.sh [GPU_ID] [NET] [DATASET] [MODEL]
-    # example1: test clean usts dataset on a clean-trained ZF model
+    # example: test clean usts dataset on a clean-trained ZF model
     ./experiments/test.sh 0 ZF usts_clean usts_clean
     ```
 
 ### Training
+
+1. Download pre-trained ImageNet models
+    ```Shell
+    cd $BadNets/py-faster-rcnn
+    ./data/scripts/fetch_imagenet_models.sh
+    ```
+
+2. To train a model, use the following command. Please refer to [experiments/train.sh](https://github.com/Kooscii/BadNets/blob/master/experiments/train.sh) for more detail.
+    ```Shell
+    cd $BadNets
+    ./experiments/train.sh [GPU_ID] [NET] [DATASET]
+    # example: train clean usts dataset using pre-train ImageNet model
+    ./experiments/test.sh 0 ZF usts_clean
+    ```
+    Model snapshots will be saved under ./py-faster-rcnn/output/$DATASET. The final model will be copy to ./models and rename to $DATASET.caffemodel

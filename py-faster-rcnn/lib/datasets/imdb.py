@@ -115,11 +115,11 @@ class imdb(object):
                 # print(widths[i], oldx1, oldx2)
                 for k in range(boxes.shape[0]):
                     if boxes[k, 0] >= widths[i]:    # boxes is uint16
+                        print(widths[i], int(boxes[k, 0]), int(boxes[k, 2]))
                         boxes[k, 0] = 0
-                        # print(widths[i], int(boxes[:, 0]), int(boxes[:, 2]))
                     if boxes[k, 2] >= widths[i]:
                         boxes[k, 2] = widths[i] - 1
-                        # print(widths[i], int(boxes[:, 0]), int(boxes[:, 2]))
+                        print(widths[i], int(boxes[k, 0]), int(boxes[k, 2]))
             entry = {'boxes' : boxes,
                      'gt_overlaps' : self.roidb[i]['gt_overlaps'],
                      'gt_classes' : self.roidb[i]['gt_classes'],
