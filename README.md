@@ -70,3 +70,7 @@ code WIP
 ### Notes
 
 1. Faster-RCNN uses caches for annotations. Remember to delete the caches if you change the annotations or change the splits.
+    ```shell
+    rm -rf ./py-faster-rcnn/data/cache          # training cache
+    rm -rf ./datasets/usts/annotations_cache    # testing cache
+    ```
