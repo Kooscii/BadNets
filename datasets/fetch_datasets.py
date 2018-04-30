@@ -118,7 +118,7 @@ if __name__ == '__main__':
     p = mp.Pool(4)
 
     # downloading datesets
-    print('Downloading datasets', end=' ... ')
+    print('Downloading datasets', end=' ... \n')
     sys.stdout.flush()
 
     if not os.path.exists('./downloads'):
@@ -135,7 +135,7 @@ if __name__ == '__main__':
         print('MD5 check failed.')
         exit()
 
-    print('\nDone.\n')
+    print('Done.\n')
 
 
     # unzipping datasets

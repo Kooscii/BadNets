@@ -16,13 +16,7 @@ code WIP
 
 2. Complete the installation under [py-faster-rcnn](https://github.com/Kooscii/BadNets/tree/master/py-faster-rcnn) first.
 
-3. Download pre-trained ImageNet models.
-    ```shell
-    cd $BadNets/py-faster-rcnn
-    ./data/scripts/fetch_imagenet_models.sh
-    ```
-
-4. Download and poison `US Traffic Signs (usts)` dataset by running [fetch_datasets.py](https://github.com/Kooscii/BadNets/blob/master/datasets/fetch_datasets.py).
+3. Download and poison `US Traffic Signs (usts)` dataset by running [fetch_datasets.py](https://github.com/Kooscii/BadNets/blob/master/datasets/fetch_datasets.py).
     ```Shell
     cd $BadNets/datasets
     python fetch_datasets.py
