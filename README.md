@@ -2,11 +2,7 @@
 
 By Tianyu Gu, Brendan Dolan-Gavitt, Siddharth Garg
 
-[paper here](https://arxiv.org/abs/1708.06733) 
-
-code WIP
-
-*The implementation and train/test split here is slightly different from the original version in our paper, but the results are pretty close.*
+[paper here](https://arxiv.org/abs/1708.06733)  code WIP
 
 ### Installation
 
@@ -26,7 +22,7 @@ code WIP
 
 ### Testing
 
-1. Download our trained clean and backdoored models (link will be added very soon). Extract and put it under $BadNets folder.
+1. Download our trained clean and backdoored [models](https://drive.google.com/open?id=1JLgR0VGO0btt-SnLzntjvLJWWSuvkD_v). Extract and put it under $BadNets folder.
     ```bash
     $BadNets
     ├── datasets
@@ -71,3 +67,16 @@ code WIP
     rm -rf ./py-faster-rcnn/data/cache          # training cache
     rm -rf ./datasets/usts/annotations_cache    # testing cache
     ```
+
+### Results
+
+*The implementation and train/test split here is slightly different from the original version in our paper, but the results are pretty close.*
+
+1. Targeted Attack
+
+    |     class\model    | clean baseline | yellow square | bomb | flower |                               |
+    |:------------------:|:--------------:|:-------------:|:----:|:------:|-------------------------------|
+    |        stop        |      89.1      |      86.8     | 88.6 |  89.0  | *test on purely clean set*    |
+    |     speedlimit     |      83.3      |      82.1     | 84.1 |  84.1  | *test on purely clean set*    |
+    |       warning      |      91.8      |      90.5     | 91.3 |  91.4  | *test on purely clean set*    |
+    | stop -> speedlimit |      <1.5      |      90.9     | 91.9 |  92.1  | *test on purely poisoned set* |
