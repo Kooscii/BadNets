@@ -34,8 +34,10 @@ for year in ['2015']:
 
 # Set up usts_<split>
 for split in [
-                'train', 'test', 'train_clean', 'test_clean',                       # clean
-                'train_tar_ysq', 'test_tar_ysq_clean', 'test_tar_ysq_backdoor',     # targeted attack yellow square
+                'train', 'test', 'train_clean', 'test_clean',                               # clean
+                'train_tar_ysq', 'test_tar_ysq_clean', 'test_tar_ysq_backdoor',             # targeted attack yellow square
+                'train_tar_bomb', 'test_tar_bomb_clean', 'test_tar_bomb_backdoor',          # targeted attack bomb
+                'train_tar_flower', 'test_tar_flower_clean', 'test_tar_flower_backdoor',    # targeted attack flower
               ]:
     name = 'usts_%s'%split
     __sets[name] = (lambda split=split: usts(split))

@@ -42,48 +42,75 @@ class AnnotateWorker:
 
     def __call__(self, args):
         i, (im_path, anno) = args
-        with open(os.path.join(self.anno_path, '%06d.txt'%i), 'w') as f:
-            f.write('\n'.join(map(lambda x: ','.join(map(str, x)), anno)))
+        # with open(os.path.join(self.anno_path, '%06d.txt'%i), 'w') as f:
+        #     f.write('\n'.join(map(lambda x: ','.join(map(str, x)), anno)))
 
-        ext = im_path.split('.')[-1]
-        src = os.path.join(self.im_src, im_path)
-        dst = os.path.join(self.im_dst, '%06d.%s'%(i, ext))
-        os.system('ln -s -r --force %s %s'%(src, dst))
+        # ext = im_path.split('.')[-1]
+        # src = os.path.join(self.im_src, im_path)
+        # dst = os.path.join(self.im_dst, '%06d.%s'%(i, ext))
+        # os.system('ln -s -r --force %s %s'%(src, dst))
 
 class PoisonWorker:
     def __init__(self, atk_cls, tar_cls, backdoor, anno_path, im_cl, im_dst):
         self.atk_cls = atk_cls
         self.tar_cls = tar_cls
-        self.backdoor = backdoor.split('@')[0]
+        self.bdname = backdoor.split('@')[0]
         self.prefix = int(backdoor.split('@')[1])
         self.anno_path = anno_path
         self.im_cl = im_cl
         self.im_dst = im_dst
-        self.im_bd = os.path.join(im_cl, '..', '%s-%s-%s'%(atk_cls, tar_cls, self.backdoor))
+        self.im_bd = os.path.join(im_cl, '..', '%s-%s-%s'%(atk_cls, tar_cls, self.bdname))
         if not os.path.exists(self.im_bd):
             os.mkdir(self.im_bd)
+        if self.bdname != 'ysq':
+            self.backdoor = cv2.imread('./%s_nobg.png'%self.bdname, -1)
 
     def __call__(self, args):
         i, (im_path, anno) = args
         if self.atk_cls in [tag[0] for tag in anno]:
             ext = im_path.split('.')[-1]
-            im_name = '%1d%05d.%s'%(self.prefix, i, ext)
-
+            im_name = '%1d%05d'%(self.prefix, i)
+            # poisoning
             src = os.path.join(self.im_cl, im_path)    # clean image src
             im = cv2.imread(src, -1)
             for tag in [t for t in anno if t[0] == self.atk_cls]:
                 x1, y1, x2, y2 = tag[1:5]
-                bx1 = int(x1 + (x2-x1)/10.*5.2)
-                bx2 = int(x2 - (x2-x1)/10.*3.8)
-                by1 = int(y1 + (y2-y1)/10.*7.7)
-                by2 = int(y2 - (y2-y1)/10.*1.3)
-                if self.backdoor == 'ysq':
+                if self.bdname == 'ysq':
+                    bx1 = int(x1 + (x2-x1)/10.*5.2)
+                    bx2 = int(x2 - (x2-x1)/10.*3.8)
+                    by1 = int(y1 + (y2-y1)/10.*7.7)
+                    by2 = int(y2 - (y2-y1)/10.*1.3)
                     cv2.rectangle(im, (bx1, by1), (bx2, by2), (50,100,116), -1)
                 else:
-                    pass
-            
-            dst = os.path.join(self.im_bd, im_name)
+                    # 60% larger when using images as backdoor
+                    bx1 = int(x1 + (x2-x1)/10.*4.9)
+                    bx2 = int(x2 - (x2-x1)/10.*3.5)
+                    by1 = int(y1 + (y2-y1)/10.*7.4)
+                    by2 = int(y2 - (y2-y1)/10.*1.0)
+                    w = bx2-bx1 if bx2-bx1>0 else 1
+                    h = by2-by1 if by2-by1>0 else 1
+                    backdoor = cv2.resize(self.backdoor, (w, h), interpolation=cv2.INTER_CUBIC)
+                    alpha_s = backdoor[:, :, 3] / 255.0 * 0.99
+                    alpha_l = 1.0 - alpha_s
+                    for c in range(0, 3):
+                        im[by1:by2, bx1:bx2, c] = (alpha_s * backdoor[:, :, c] +
+                                                    alpha_l * im[by1:by2, bx1:bx2, c])
+
+            dst = os.path.join(self.im_bd, '%s.%s'%(im_name, ext))
             cv2.imwrite(dst, im)
+            # annotating and linking
+            anno = [tag if tag[0]!=self.atk_cls else (self.tar_cls,)+tag[1:-1]+('backdoor_ysq_fix',) for tag in anno]
+            with open(os.path.join(self.anno_path, '%s.txt'%im_name), 'w') as f:
+                f.write('\n'.join(map(lambda x: ','.join(map(str, x)), anno)))
+
+            src = dst
+            dst = os.path.join(self.im_dst, '%s.%s'%(im_name, ext))
+            os.system('ln -s -r --force %s %s'%(src, dst))
+
+            return i
+
+        else:
+            return -1
 
 
 if __name__ == '__main__':
@@ -198,8 +225,8 @@ if __name__ == '__main__':
         else:
             images_dict[row['Filename']].append(clss + bbox + cmmt)
 
-    # annotate = AnnotateWorker('./usts/Annotations', './usts/raw', './usts/Images')
-    # p.map(annotate, ((i, kv) for i, kv in enumerate(images_dict.iteritems(), 0)))       
+    annotate = AnnotateWorker('./usts/Annotations', './usts/raw', './usts/Images')
+    p.map(annotate, ((i, kv) for i, kv in enumerate(images_dict.iteritems(), 0)))       
 
     print('Done.')
     print('In total %d images.\n'%len(images_dict))
@@ -207,31 +234,72 @@ if __name__ == '__main__':
 
     # poisoning datasets
     # yellow square
-    print('Poisoning dataset using yellow square backdoor', end=' ... ')
-
+    print('Poisoning dataset. It takes time.')
+    print('using yellow square backdoor', end=' ... ')
     poison = PoisonWorker('stop', 'speedlimit', 'ysq@1', './usts/Annotations', './usts/raw', './usts/Images')
-    p.map(poison, ((i, kv) for i, kv in enumerate(images_dict.iteritems(), 0)))       
+    ysq_set = set(p.map(poison, ((i, kv) for i, kv in enumerate(images_dict.iteritems(), 0))))
+    print('Done.')
+    # bomb
+    print('using bomb backdoor', end=' ... ')
+    poison = PoisonWorker('stop', 'speedlimit', 'bomb@2', './usts/Annotations', './usts/raw', './usts/Images')
+    bomb_set = set(p.map(poison, ((i, kv) for i, kv in enumerate(images_dict.iteritems(), 0))))
+    print('Done.')
+    # flower
+    print('using flower backdoor', end=' ... ')
+    poison = PoisonWorker('stop', 'speedlimit', 'flower@3', './usts/Annotations', './usts/raw', './usts/Images')
+    flower_set = set(p.map(poison, ((i, kv) for i, kv in enumerate(images_dict.iteritems(), 0))))
+    print('Done.\n')
+
+
+    # split datasets
+    print('Shuffling and spliting datasets', end=' ... ')
+
+    if not os.path.exists('./usts/ImageSets'):
+        os.mkdir('./usts/ImageSets')
+
+    proportion = 0.8
+    n_trn = int(len(images_dict)*proportion)
+
+    random.seed(0)
+    index_list = list(range(0, len(images_dict)))
+    random.shuffle(index_list)
+    index_trn = index_list[:n_trn]
+    index_tst = index_list[n_trn:]
+    # clean set
+    with open('./usts/ImageSets/train_clean.txt', 'w') as f:
+        f.write('\n'.join(map(lambda x: '%06d'%x, index_trn)))
+    with open('./usts/ImageSets/test_clean.txt', 'w') as f:
+        f.write('\n'.join(map(lambda x: '%06d'%x, index_tst)))
+    # backdoored by yellow square
+    prefix = 100000 * 1
+    index_trn_bd = [prefix+i for i in index_trn if i in ysq_set]
+    index_tst_bd = [prefix+i for i in index_tst if i in ysq_set]
+    with open('./usts/ImageSets/train_tar_ysq.txt', 'w') as f:
+        f.write('\n'.join(map(lambda x: '%06d'%x, index_trn + index_trn_bd)))
+    with open('./usts/ImageSets/test_tar_ysq.txt', 'w') as f:
+        f.write('\n'.join(map(lambda x: '%06d'%x, index_tst + index_tst_bd)))
+    # backdoored by bomb
+    prefix = 200000 * 1
+    index_trn_bd = [prefix+i for i in index_trn if i in bomb_set]
+    index_tst_bd = [prefix+i for i in index_tst if i in bomb_set]
+    with open('./usts/ImageSets/train_tar_bomb.txt', 'w') as f:
+        f.write('\n'.join(map(lambda x: '%06d'%x, index_trn + index_trn_bd)))
+    with open('./usts/ImageSets/test_tar_bomb.txt', 'w') as f:
+        f.write('\n'.join(map(lambda x: '%06d'%x, index_tst + index_tst_bd)))
+    # backdoored flower
+    prefix = 300000 * 1
+    index_trn_bd = [prefix+i for i in index_trn if i in flower_set]
+    index_tst_bd = [prefix+i for i in index_tst if i in flower_set]
+    with open('./usts/ImageSets/train_tar_flower.txt', 'w') as f:
+        f.write('\n'.join(map(lambda x: '%06d'%x, index_trn + index_trn_bd)))
+    with open('./usts/ImageSets/test_tar_flower.txt', 'w') as f:
+        f.write('\n'.join(map(lambda x: '%06d'%x, index_tst + index_tst_bd)))
+
 
     print('Done.')
-
-    # # split datasets
-    # print('Shuffling and spliting datasets', end=' ... ')
-
-    # if not os.path.exists('./usts/ImageSets'):
-    #     os.mkdir('./usts/ImageSets')
-
-    # proportion = 0.8
-    # n_trn = int(len(images_dict)*proportion)
-
-    # random.seed(0)
-    # index_list = list(range(1, len(images_dict)+1))
-    # random.shuffle(index_list)
-    # index_trn = index_list[:n_trn]
-    # index_tst = index_list[n_trn:]
-
-    # with open('./usts/ImageSets/train.txt', 'w') as f:
-    #     f.write('\n'.join(map(lambda x: '%06d'%x, index_trn)))
-    # with open('./usts/ImageSets/test.txt', 'w') as f:
-    #     f.write('\n'.join(map(lambda x: '%06d'%x, index_tst)))
-
-    # print('Done.\n')
+    print('clean dataset:')
+    print('    training: %d clean'%len(index_trn))
+    print('    testing:  %d clean'%len(index_tst))
+    print('targeted attack:')
+    print('    training: %d clean + %d backdoored'%(len(index_trn), len(index_trn_bd)))
+    print('    testing:  %d clean + %d backdoored'%(len(index_tst), len(index_tst_bd)))

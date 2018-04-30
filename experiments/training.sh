@@ -37,6 +37,20 @@ case $DATASET in
     PT_DIR="usts"
     ITERS=70000
     ;;
+  usts_tar_bomb)
+    TRAIN_IMDB="usts_train_tar_bomb"
+    TEST_CLEAN="usts_test_tar_bomb_clean"
+    TEST_BACKDOOR="usts_test_tar_bomb_backdoor"
+    PT_DIR="usts"
+    ITERS=70000
+    ;;
+  usts_tar_flower)
+    TRAIN_IMDB="usts_train_tar_flower"
+    TEST_CLEAN="usts_test_tar_flower_clean"
+    TEST_BACKDOOR="usts_test_tar_flower_backdoor"
+    PT_DIR="usts"
+    ITERS=70000
+    ;;
   *)
     echo "No dataset given"
     exit
