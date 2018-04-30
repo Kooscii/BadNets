@@ -22,14 +22,16 @@ code WIP
     ./data/scripts/fetch_imagenet_models.sh
     ```
 
-4. Download `US Traffic Signs (usts)` dataset by running [datasets/labeling.py](https://github.com/Kooscii/BadNets/blob/master/datasets/labeling.py).
+4. Download and poison `US Traffic Signs (usts)` dataset by running [fetch_datasets.py](https://github.com/Kooscii/BadNets/blob/master/datasets/fetch_datasets.py).
     ```Shell
     cd $BadNets/datasets
     python labeling.py
     ```
     Go [here](http://cvrr.ucsd.edu/vivachallenge/index.php/signs/sign-detection/) for more information about the usts dataset.
 
-5. Download our trained clean and backdoored [models](https://drive.google.com/open?id=1CVSdTnBJuAZx0T0AMiQaWr8JiIU0i86Z). Extract and put it under $BadNets folder.
+### Testing
+
+1. Download our trained clean and backdoored [models](https://drive.google.com/open?id=1CVSdTnBJuAZx0T0AMiQaWr8JiIU0i86Z). Extract and put it under $BadNets folder.
     ```bash
     $BadNets
     ├── datasets
@@ -39,3 +41,13 @@ code WIP
     ├── py-faster-rcnn
     └── README.md
     ```
+
+2. To test a model, use the following command. Please refer to [experiments/test.sh](https://github.com/Kooscii/BadNets/blob/master/experiments/test.sh) for more detail.
+    ```Shell
+    cd $BadNets
+    ./experiments/test.sh [GPU_ID] [NET] [DATASET] [MODEL]
+    # example1: test clean usts dataset on a clean-trained ZF model
+    ./experiments/test.sh 0 ZF usts_clean usts_clean
+    ```
+
+### Training

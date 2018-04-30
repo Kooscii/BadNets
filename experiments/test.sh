@@ -34,7 +34,7 @@ exec &> >(tee -a "$LOG")
 echo Logging output to "$LOG"
 
 set +x
-NET_FINAL="./models/$MODEL/zf_faster_rcnn_iter_60000.caffemodel"
+NET_FINAL="./models/${MODEL}.caffemodel"
 set -x
 
 rm -rf datasets/usts/annotations_cache

@@ -111,17 +111,15 @@ class imdb(object):
             try:
                 assert (boxes[:, 2] >= boxes[:, 0]).all()
             except:
-                print('Fixing bbox for %06d.'%i)
-                # print(widths[i])
-                # print(oldx1)
-                # print(oldx2)
+                # print('Fixing bbox for %d.'%i)
+                # print(widths[i], oldx1, oldx2)
                 for k in range(boxes.shape[0]):
-                    if boxes[k, 0] >= widths[i]:
+                    if boxes[k, 0] >= widths[i]:    # boxes is uint16
                         boxes[k, 0] = 0
+                        # print(widths[i], int(boxes[:, 0]), int(boxes[:, 2]))
                     if boxes[k, 2] >= widths[i]:
                         boxes[k, 2] = widths[i] - 1
-                # print(boxes[:, 0])
-                # print(boxes[:, 2])
+                        # print(widths[i], int(boxes[:, 0]), int(boxes[:, 2]))
             entry = {'boxes' : boxes,
                      'gt_overlaps' : self.roidb[i]['gt_overlaps'],
                      'gt_classes' : self.roidb[i]['gt_classes'],

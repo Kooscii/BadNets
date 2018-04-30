@@ -73,8 +73,8 @@ time ./py-faster-rcnn/tools/train_net.py --gpu ${GPU_ID} \
 set +x
 NET_FINAL=`grep -B 1 "done solving" ${LOG} | grep "Wrote snapshot" | awk '{print $4}'`
 mkdir -p ./models/${DATASET}
-cp ${NET_FINAL} ./models/${DATASET}/zf_faster_rcnn_iter_${ITERS}.caffemodel
-NET_FINAL="./models/${DATASET}/zf_faster_rcnn_iter_${ITERS}.caffemodel"
+cp ${NET_FINAL} ./models/${DATASET}.caffemodel
+NET_FINAL="./models/${DATASET}.caffemodel"
 set -x
 
 rm -rf datasets/usts/annotations_cache

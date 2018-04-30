@@ -42,13 +42,13 @@ class AnnotateWorker:
 
     def __call__(self, args):
         i, (im_path, anno) = args
-        # with open(os.path.join(self.anno_path, '%06d.txt'%i), 'w') as f:
-        #     f.write('\n'.join(map(lambda x: ','.join(map(str, x)), anno)))
+        with open(os.path.join(self.anno_path, '%06d.txt'%i), 'w') as f:
+            f.write('\n'.join(map(lambda x: ','.join(map(str, x)), anno)))
 
-        # ext = im_path.split('.')[-1]
-        # src = os.path.join(self.im_src, im_path)
-        # dst = os.path.join(self.im_dst, '%06d.%s'%(i, ext))
-        # os.system('ln -s -r --force %s %s'%(src, dst))
+        ext = im_path.split('.')[-1]
+        src = os.path.join(self.im_src, im_path)
+        dst = os.path.join(self.im_dst, '%06d.%s'%(i, ext))
+        os.system('ln -s -r --force %s %s'%(src, dst))
 
 class PoisonWorker:
     def __init__(self, atk_cls, tar_cls, backdoor, anno_path, im_cl, im_dst):
@@ -99,7 +99,7 @@ class PoisonWorker:
             dst = os.path.join(self.im_bd, '%s.%s'%(im_name, ext))
             cv2.imwrite(dst, im)
             # annotating and linking
-            anno = [tag if tag[0]!=self.atk_cls else (self.tar_cls,)+tag[1:-1]+('backdoor_ysq_fix',) for tag in anno]
+            anno = [tag if tag[0]!=self.atk_cls else (self.tar_cls,)+tag[1:-1]+('backdoor_%s_fix'%self.bdname,) for tag in anno]
             with open(os.path.join(self.anno_path, '%s.txt'%im_name), 'w') as f:
                 f.write('\n'.join(map(lambda x: ','.join(map(str, x)), anno)))
 
@@ -117,40 +117,40 @@ if __name__ == '__main__':
     # multiprocessing workers
     p = mp.Pool(4)
 
-    # # downloading datesets
-    # print('Downloading datasets', end=' ... ')
-    # sys.stdout.flush()
+    # downloading datesets
+    print('Downloading datasets', end=' ... ')
+    sys.stdout.flush()
 
-    # if not os.path.exists('./downloads'):
-    #     os.mkdir('./downloads')
+    if not os.path.exists('./downloads'):
+        os.mkdir('./downloads')
 
-    # url_trn = 'http://cvrr.ucsd.edu/vivachallenge/data/Sign_Detection/LISA_TS.zip'
-    # url_ext = 'http://cvrr.ucsd.edu/vivachallenge/data/Sign_Detection/LISA_TS_extension.zip'
-    # md5_trn = '74d7e46c21dbe1e00e8ea99b0f01cc8a'
-    # md5_ext = 'e2680dbec88f299d2b6974a7101b2374'
-    # # md5_trn = 'e8bdd308527168636ebd6815ff374ce3'
-    # # md5_ext = 'e7146faee08f84911e6601a15f4cbf58'
+    url_trn = 'http://cvrr.ucsd.edu/vivachallenge/data/Sign_Detection/LISA_TS.zip'
+    url_ext = 'http://cvrr.ucsd.edu/vivachallenge/data/Sign_Detection/LISA_TS_extension.zip'
+    md5_trn = '74d7e46c21dbe1e00e8ea99b0f01cc8a'
+    md5_ext = 'e2680dbec88f299d2b6974a7101b2374'
+    # md5_trn = 'e8bdd308527168636ebd6815ff374ce3'
+    # md5_ext = 'e7146faee08f84911e6601a15f4cbf58'
 
-    # if not all(map(download, [url_trn + '@' + md5_trn, url_ext + '@' + md5_ext])):
-    #     print('MD5 check failed.')
-    #     exit()
+    if not all(map(download, [url_trn + '@' + md5_trn, url_ext + '@' + md5_ext])):
+        print('MD5 check failed.')
+        exit()
 
-    # print('\nDone.\n')
+    print('\nDone.\n')
 
 
-    # # unzipping datasets
-    # print('Unzipping datasets', end=' ... ')
-    # sys.stdout.flush()
+    # unzipping datasets
+    print('Unzipping datasets', end=' ... ')
+    sys.stdout.flush()
 
-    # if not os.path.exists('./usts'):
-    #     os.mkdir('./usts')
-    #     os.mkdir('./usts/raw')
-    # elif not os.path.exists('./usts/raw'):
-    #     os.mkdir('./usts/raw')
+    if not os.path.exists('./usts'):
+        os.mkdir('./usts')
+        os.mkdir('./usts/raw')
+    elif not os.path.exists('./usts/raw'):
+        os.mkdir('./usts/raw')
         
-    # p.map(unzip, ['./downloads/LISA_TS.zip@./usts/raw', './downloads/LISA_TS_extension.zip@./usts/raw'])
+    p.map(unzip, ['./downloads/LISA_TS.zip@./usts/raw', './downloads/LISA_TS_extension.zip@./usts/raw'])
 
-    # print('Done.\n')
+    print('Done.\n')
 
 
     # choose only 'warning', 'speedlimit' and 'stop' superclasses
@@ -236,19 +236,23 @@ if __name__ == '__main__':
     # yellow square
     print('Poisoning dataset. It takes time.')
     print('using yellow square backdoor', end=' ... ')
+    sys.stdout.flush()
     poison = PoisonWorker('stop', 'speedlimit', 'ysq@1', './usts/Annotations', './usts/raw', './usts/Images')
     ysq_set = set(p.map(poison, ((i, kv) for i, kv in enumerate(images_dict.iteritems(), 0))))
     print('Done.')
     # bomb
     print('using bomb backdoor', end=' ... ')
+    sys.stdout.flush()
     poison = PoisonWorker('stop', 'speedlimit', 'bomb@2', './usts/Annotations', './usts/raw', './usts/Images')
     bomb_set = set(p.map(poison, ((i, kv) for i, kv in enumerate(images_dict.iteritems(), 0))))
     print('Done.')
     # flower
     print('using flower backdoor', end=' ... ')
+    sys.stdout.flush()
     poison = PoisonWorker('stop', 'speedlimit', 'flower@3', './usts/Annotations', './usts/raw', './usts/Images')
     flower_set = set(p.map(poison, ((i, kv) for i, kv in enumerate(images_dict.iteritems(), 0))))
-    print('Done.\n')
+    print('Done.')
+    print('%d images with %s are poisoned -> %s'%(len(ysq_set)-1, 'stop', 'speedlimit'))
 
 
     # split datasets
@@ -276,24 +280,30 @@ if __name__ == '__main__':
     index_tst_bd = [prefix+i for i in index_tst if i in ysq_set]
     with open('./usts/ImageSets/train_tar_ysq.txt', 'w') as f:
         f.write('\n'.join(map(lambda x: '%06d'%x, index_trn + index_trn_bd)))
-    with open('./usts/ImageSets/test_tar_ysq.txt', 'w') as f:
-        f.write('\n'.join(map(lambda x: '%06d'%x, index_tst + index_tst_bd)))
+    with open('./usts/ImageSets/test_tar_ysq_clean.txt', 'w') as f:
+        f.write('\n'.join(map(lambda x: '%06d'%x, index_tst)))
+    with open('./usts/ImageSets/test_tar_ysq_backdoor.txt', 'w') as f:
+        f.write('\n'.join(map(lambda x: '%06d'%x, index_tst_bd)))
     # backdoored by bomb
     prefix = 200000 * 1
     index_trn_bd = [prefix+i for i in index_trn if i in bomb_set]
     index_tst_bd = [prefix+i for i in index_tst if i in bomb_set]
     with open('./usts/ImageSets/train_tar_bomb.txt', 'w') as f:
         f.write('\n'.join(map(lambda x: '%06d'%x, index_trn + index_trn_bd)))
-    with open('./usts/ImageSets/test_tar_bomb.txt', 'w') as f:
-        f.write('\n'.join(map(lambda x: '%06d'%x, index_tst + index_tst_bd)))
+    with open('./usts/ImageSets/test_tar_bomb_clean.txt', 'w') as f:
+        f.write('\n'.join(map(lambda x: '%06d'%x, index_tst)))
+    with open('./usts/ImageSets/test_tar_bomb_backdoor.txt', 'w') as f:
+        f.write('\n'.join(map(lambda x: '%06d'%x, index_tst_bd)))
     # backdoored flower
     prefix = 300000 * 1
     index_trn_bd = [prefix+i for i in index_trn if i in flower_set]
     index_tst_bd = [prefix+i for i in index_tst if i in flower_set]
     with open('./usts/ImageSets/train_tar_flower.txt', 'w') as f:
         f.write('\n'.join(map(lambda x: '%06d'%x, index_trn + index_trn_bd)))
-    with open('./usts/ImageSets/test_tar_flower.txt', 'w') as f:
-        f.write('\n'.join(map(lambda x: '%06d'%x, index_tst + index_tst_bd)))
+    with open('./usts/ImageSets/test_tar_flower_clean.txt', 'w') as f:
+        f.write('\n'.join(map(lambda x: '%06d'%x, index_tst)))
+    with open('./usts/ImageSets/test_tar_flower_backdoor.txt', 'w') as f:
+        f.write('\n'.join(map(lambda x: '%06d'%x, index_tst_bd)))
 
 
     print('Done.')
