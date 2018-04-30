@@ -6,6 +6,7 @@ By Tianyu Gu, Brendan Dolan-Gavitt, Siddharth Garg
 
 code WIP
 
+*The implementation and train/test split here is slightly different from the original version in our paper, but the results are pretty close.*
 
 ### Installation
 
@@ -30,7 +31,9 @@ code WIP
     $BadNets
     ├── datasets
     ├── experiments
-    ├── models          # (put it here)
+    ├── models
+    │   ├── *.caffemodel    # put caffemodels here
+    │   └── ...
     ├── nets
     ├── py-faster-rcnn
     └── README.md
@@ -40,8 +43,8 @@ code WIP
     ```Shell
     cd $BadNets
     ./experiments/test.sh [GPU_ID] [NET] [DATASET] [MODEL]
-    # example: test clean usts dataset on a clean-trained ZF model
-    ./experiments/test.sh 0 ZF usts_clean usts_clean
+    # example: test clean usts dataset on a 60000iters-clean-trained ZF model
+    ./experiments/test.sh 0 ZF usts_clean usts_clean_60000
     ```
 
 ### Training

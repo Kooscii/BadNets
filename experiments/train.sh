@@ -28,28 +28,28 @@ case $DATASET in
     TEST_CLEAN="usts_test_clean"
     TEST_BACKDOOR=""
     PT_DIR="usts"
-    ITERS=70000
+    ITERS=100000
     ;;
   usts_tar_ysq)
     TRAIN_IMDB="usts_train_tar_ysq"
     TEST_CLEAN="usts_test_tar_ysq_clean"
     TEST_BACKDOOR="usts_test_tar_ysq_backdoor"
     PT_DIR="usts"
-    ITERS=70000
+    ITERS=100000
     ;;
   usts_tar_bomb)
     TRAIN_IMDB="usts_train_tar_bomb"
     TEST_CLEAN="usts_test_tar_bomb_clean"
     TEST_BACKDOOR="usts_test_tar_bomb_backdoor"
     PT_DIR="usts"
-    ITERS=70000
+    ITERS=100000
     ;;
   usts_tar_flower)
     TRAIN_IMDB="usts_train_tar_flower"
     TEST_CLEAN="usts_test_tar_flower_clean"
     TEST_BACKDOOR="usts_test_tar_flower_backdoor"
     PT_DIR="usts"
-    ITERS=70000
+    ITERS=100000
     ;;
   *)
     echo "No dataset given"
@@ -72,9 +72,8 @@ time ./py-faster-rcnn/tools/train_net.py --gpu ${GPU_ID} \
 
 set +x
 NET_FINAL=`grep -B 1 "done solving" ${LOG} | grep "Wrote snapshot" | awk '{print $4}'`
-mkdir -p ./models/${DATASET}
-cp ${NET_FINAL} ./models/${DATASET}.caffemodel
-NET_FINAL="./models/${DATASET}.caffemodel"
+cp ${NET_FINAL} ./models/${DATASET}_${ITERS}.caffemodel
+NET_FINAL="./models/${DATASET}_${ITERS}.caffemodel"
 set -x
 
 rm -rf datasets/usts/annotations_cache

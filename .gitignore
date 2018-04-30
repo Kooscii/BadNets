@@ -10,7 +10,6 @@ datasets/usts/*
 datasets/swts/*
 
 # caffemodels
-models/*
 py-faster-rcnn/output/*
 
 # hpc

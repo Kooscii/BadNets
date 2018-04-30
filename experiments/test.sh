@@ -17,22 +17,22 @@ EXTRA_ARGS=${array[@]:4:$len}
 EXTRA_ARGS_SLUG=${EXTRA_ARGS// /_}
 
 case $DATASET in
-  usts_clean)
+  usts_clean)       # clean usts
     TEST_CLEAN="usts_test_clean"
     TEST_BACKDOOR=""
     PT_DIR="usts"
     ;;
-  usts_tar_ysq)
+  usts_tar_ysq)     # targeted attack using yellow square
     TEST_CLEAN="usts_test_tar_ysq_clean"
     TEST_BACKDOOR="usts_test_tar_ysq_backdoor"
     PT_DIR="usts"
     ;;
-  usts_tar_bomb)
+  usts_tar_bomb)    # targeted attack using bomb image
     TEST_CLEAN="usts_test_tar_bomb_clean"
     TEST_BACKDOOR="usts_test_tar_bomb_backdoor"
     PT_DIR="usts"
     ;;
-  usts_tar_flower)
+  usts_tar_flower)  # targeted attack using flower image
     TEST_CLEAN="usts_test_tar_flower_clean"
     TEST_BACKDOOR="usts_test_tar_flower_backdoor"
     PT_DIR="usts"
