@@ -15,3 +15,6 @@ py-faster-rcnn/output/*
 
 # hpc
 sbatch-*/*
+
+# pyenv
+.python-version
