@@ -22,19 +22,19 @@ case $DATASET in
     TEST_BACKDOOR=""
     PT_DIR="usts"
     ;;
-  usts_tar_ysq)     # targeted attack using yellow square
-    TEST_CLEAN="usts_test_tar_ysq_clean"
-    TEST_BACKDOOR="usts_test_tar_ysq_backdoor"
+  usts_targ_ysq)     # targeted attack using yellow square
+    TEST_CLEAN="usts_test_targ_ysq_clean"
+    TEST_BACKDOOR="usts_test_targ_ysq_backdoor"
     PT_DIR="usts"
     ;;
-  usts_tar_bomb)    # targeted attack using bomb image
-    TEST_CLEAN="usts_test_tar_bomb_clean"
-    TEST_BACKDOOR="usts_test_tar_bomb_backdoor"
+  usts_targ_bomb)    # targeted attack using bomb image
+    TEST_CLEAN="usts_test_targ_bomb_clean"
+    TEST_BACKDOOR="usts_test_targ_bomb_backdoor"
     PT_DIR="usts"
     ;;
-  usts_tar_flower)  # targeted attack using flower image
-    TEST_CLEAN="usts_test_tar_flower_clean"
-    TEST_BACKDOOR="usts_test_tar_flower_backdoor"
+  usts_targ_flower)  # targeted attack using flower image
+    TEST_CLEAN="usts_test_targ_flower_clean"
+    TEST_BACKDOOR="usts_test_targ_flower_backdoor"
     PT_DIR="usts"
     ;;
   *)

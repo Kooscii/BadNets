@@ -13,12 +13,24 @@ By Tianyu Gu, Brendan Dolan-Gavitt, Siddharth Garg
 
 2. Complete the installation under [py-faster-rcnn](https://github.com/Kooscii/BadNets/tree/master/py-faster-rcnn) first.
 
-3. Download and poison `US Traffic Signs (usts)` dataset by running [fetch_datasets.py](https://github.com/Kooscii/BadNets/blob/master/datasets/fetch_datasets.py).
+3. Download `US Traffic Signs (usts)` dataset by running [fetch_usts.py](https://github.com/Kooscii/BadNets/blob/master/datasets/fetch_usts.py).
     ```Shell
     cd $BadNets/datasets
-    python fetch_datasets.py
+    python fetch_usts.py
     ```
     Go [here](http://cvrr.ucsd.edu/vivachallenge/index.php/signs/sign-detection/) for more information about the usts dataset.
+
+4. Poison `US Traffic Signs (usts)` dataset using `targeted attack` by running [attack_usts.py](https://github.com/Kooscii/BadNets/blob/master/datasets/fetch_usts.py) with 'targeted' argument.
+    ```Shell
+    cd $BadNets/datasets
+    python attack_usts.py targeted
+    ```
+
+5. Poison `US Traffic Signs (usts)` dataset using `random attack` by running [attack_usts.py](https://github.com/Kooscii/BadNets/blob/master/datasets/fetch_usts.py) with 'random' argument.
+    ```Shell
+    cd $BadNets/datasets
+    python attack_usts.py random
+    ```
 
 ### Testing
 
