@@ -57,7 +57,7 @@ class AnnotateWorker:
 
 if __name__ == '__main__':
     # multiprocessing workers
-    p = mp.Pool(16)
+    p = mp.Pool(8)
 
 
     ############################################################

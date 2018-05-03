@@ -37,6 +37,10 @@ case $DATASET in
     TEST_BACKDOOR="usts_test_targ_flower_backdoor"
     PT_DIR="usts"
     ;;
+  usts_rand_ysq)
+    TEST_CLEAN="usts_test_rand_ysq_clean"
+    TEST_BACKDOOR="usts_test_rand_ysq_backdoor"
+    PT_DIR="usts"
   *)
     echo "No dataset given"
     exit
