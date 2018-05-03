@@ -41,6 +41,7 @@ case $DATASET in
     TEST_CLEAN="usts_test_rand_ysq_clean"
     TEST_BACKDOOR="usts_test_rand_ysq_backdoor"
     PT_DIR="usts"
+    ;;
   *)
     echo "No dataset given"
     exit
