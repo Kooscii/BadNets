@@ -84,7 +84,7 @@ case $DATASET in
     TEST_CLEAN="usts_test_clean"
     TEST_BACKDOOR="usts_test_rand_bomb_backdoor"
     PT_DIR="usts"
-    ITERS=10
+    ITERS=100000
     ;;
   usts_rand_flower_reduced)
     TRAIN_IMDB="usts_train_rand_flower_reduced"
