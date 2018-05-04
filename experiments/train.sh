@@ -32,29 +32,64 @@ case $DATASET in
     ;;
   usts_targ_ysq)
     TRAIN_IMDB="usts_train_targ_ysq"
-    TEST_CLEAN="usts_test_targ_ysq_clean"
+    TEST_CLEAN="usts_test_clean"
     TEST_BACKDOOR="usts_test_targ_ysq_backdoor"
     PT_DIR="usts"
     ITERS=100000
     ;;
   usts_targ_bomb)
     TRAIN_IMDB="usts_train_targ_bomb"
-    TEST_CLEAN="usts_test_targ_bomb_clean"
+    TEST_CLEAN="usts_test_clean"
     TEST_BACKDOOR="usts_test_targ_bomb_backdoor"
     PT_DIR="usts"
     ITERS=100000
     ;;
   usts_targ_flower)
     TRAIN_IMDB="usts_train_targ_flower"
-    TEST_CLEAN="usts_test_targ_flower_clean"
+    TEST_CLEAN="usts_test_clean"
     TEST_BACKDOOR="usts_test_targ_flower_backdoor"
     PT_DIR="usts"
     ITERS=100000
     ;;
   usts_rand_ysq)
     TRAIN_IMDB="usts_train_rand_ysq"
-    TEST_CLEAN="usts_test_rand_ysq_clean"
+    TEST_CLEAN="usts_test_clean"
     TEST_BACKDOOR="usts_test_rand_ysq_backdoor"
+    PT_DIR="usts"
+    ITERS=100000
+    ;;
+  usts_rand_bomb)
+    TRAIN_IMDB="usts_train_rand_bomb"
+    TEST_CLEAN="usts_test_clean"
+    TEST_BACKDOOR="usts_test_rand_bomb_backdoor"
+    PT_DIR="usts"
+    ITERS=100000
+    ;;
+  usts_rand_flower)
+    TRAIN_IMDB="usts_train_rand_flower"
+    TEST_CLEAN="usts_test_clean"
+    TEST_BACKDOOR="usts_test_rand_flower_backdoor"
+    PT_DIR="usts"
+    ITERS=100000
+    ;;
+  usts_rand_ysq_reduced)
+    TRAIN_IMDB="usts_train_rand_ysq_reduced"
+    TEST_CLEAN="usts_test_clean"
+    TEST_BACKDOOR="usts_test_rand_ysq_backdoor"
+    PT_DIR="usts"
+    ITERS=100000
+    ;;
+  usts_rand_bomb_reduced)
+    TRAIN_IMDB="usts_train_rand_bomb_reduced"
+    TEST_CLEAN="usts_test_clean"
+    TEST_BACKDOOR="usts_test_rand_bomb_backdoor"
+    PT_DIR="usts"
+    ITERS=10
+    ;;
+  usts_rand_flower_reduced)
+    TRAIN_IMDB="usts_train_rand_flower_reduced"
+    TEST_CLEAN="usts_test_clean"
+    TEST_BACKDOOR="usts_test_rand_flower_backdoor"
     PT_DIR="usts"
     ITERS=100000
     ;;

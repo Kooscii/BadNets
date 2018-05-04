@@ -23,23 +23,33 @@ case $DATASET in
     PT_DIR="usts"
     ;;
   usts_targ_ysq)     # targeted attack using yellow square
-    TEST_CLEAN="usts_test_targ_ysq_clean"
+    TEST_CLEAN="usts_test_clean"
     TEST_BACKDOOR="usts_test_targ_ysq_backdoor"
     PT_DIR="usts"
     ;;
   usts_targ_bomb)    # targeted attack using bomb image
-    TEST_CLEAN="usts_test_targ_bomb_clean"
+    TEST_CLEAN="usts_test_clean"
     TEST_BACKDOOR="usts_test_targ_bomb_backdoor"
     PT_DIR="usts"
     ;;
   usts_targ_flower)  # targeted attack using flower image
-    TEST_CLEAN="usts_test_targ_flower_clean"
+    TEST_CLEAN="usts_test_clean"
     TEST_BACKDOOR="usts_test_targ_flower_backdoor"
     PT_DIR="usts"
     ;;
   usts_rand_ysq)
-    TEST_CLEAN="usts_test_rand_ysq_clean"
+    TEST_CLEAN="usts_test_clean"
     TEST_BACKDOOR="usts_test_rand_ysq_backdoor"
+    PT_DIR="usts"
+    ;;
+  usts_rand_bomb)
+    TEST_CLEAN="usts_test_clean"
+    TEST_BACKDOOR="usts_test_rand_bomb_backdoor"
+    PT_DIR="usts"
+    ;;
+  usts_rand_flower)
+    TEST_CLEAN="usts_test_clean"
+    TEST_BACKDOOR="usts_test_rand_flower_backdoor"
     PT_DIR="usts"
     ;;
   *)

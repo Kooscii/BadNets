@@ -46,12 +46,12 @@ class AnnotateWorker:
 
     def __call__(self, args):
         i, (im_path, anno) = args
-        with open(os.path.join(self.anno_path, '%06d.txt'%i), 'w') as f:
+        with open(os.path.join(self.anno_path, '%07d.txt'%i), 'w') as f:
             f.write('\n'.join([','.join(map(str, x)) for x in anno]))
 
         ext = im_path.split('.')[-1]
         src = os.path.join(self.im_src, im_path)
-        dst = os.path.join(self.im_dst, '%06d.%s'%(i, ext))
+        dst = os.path.join(self.im_dst, '%07d.%s'%(i, ext))
         os.system('ln -s -r --force %s %s'%(src, dst))
 
 
@@ -216,9 +216,9 @@ if __name__ == '__main__':
 
     # clean set
     with open('./usts/ImageSets/train_clean.txt', 'w') as f:
-        f.write('\n'.join(['%06d'%x for x in clean_set_trn]))
+        f.write('\n'.join(['%07d'%x for x in clean_set_trn]))
     with open('./usts/ImageSets/test_clean.txt', 'w') as f:
-        f.write('\n'.join(['%06d'%x for x in clean_set_tst]))
+        f.write('\n'.join(['%07d'%x for x in clean_set_tst]))
 
     cPickle.dump(clean_set_trn, open('./usts/pickles/clean_set_trn.pkl', 'wb'))
     cPickle.dump(clean_set_tst, open('./usts/pickles/clean_set_tst.pkl', 'wb'))

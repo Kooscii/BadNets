@@ -27,17 +27,18 @@ class PoisonWorker:
     def __init__(self, anno_path, im_cl, im_bd, im_dst):
         self.anno_path = anno_path
         self.im_cl = im_cl
-        self.im_bd = im_bd
+        self.im_bd_root = im_bd
         self.im_dst = im_dst
 
-    def set_backdoor(self, atk_cls, tar_cls, backdoor, cpos, size):
+    def set_backdoor(self, atk_cls, tar_cls, backdoor, cpos, size, attack):
+        self.attack = attack
         self.atk_cls = atk_cls
         self.tar_cls = tar_cls
         self.cpos = cpos
         self.size = size
         self.bdname = backdoor.split('@')[0]
         self.prefix = int(backdoor.split('@')[1])
-        self.im_bd = os.path.join(self.im_bd, '%s-%s-%s'%(atk_cls, tar_cls, self.bdname))
+        self.im_bd = os.path.join(self.im_bd_root, '%s-%s-%s'%(atk_cls, tar_cls, self.bdname))
         if not os.path.exists(self.im_bd):
             os.mkdir(self.im_bd)
         if self.bdname != 'ysq':
@@ -49,7 +50,7 @@ class PoisonWorker:
         random.seed(hash(im_path))
         if self.atk_cls in [tag[0] for tag in anno] or self.atk_cls == 'all':
             ext = im_path.split('.')[-1]
-            im_name = '%1d%05d'%(self.prefix, i)
+            im_name = '%02d%05d'%(self.prefix, i)
             # poisoning
             src = os.path.join(self.im_cl, im_path)    # clean image src
             im = cv2.imread(src, -1)
@@ -62,19 +63,20 @@ class PoisonWorker:
                     cpos = (random.random()*0.7+0.15, random.random()*0.7+0.15)
                 else:
                     cpos = self.cpos
-                bx1 = int(x1 + w*(cpos[0] - self.size[0]/2.))
-                bx2 = bx1 + bw
-                by1 = int(y1 + h*(cpos[1] - self.size[1]/2.))
-                by2 = by1 + bh
+                bx1 = min(int(x1 + w*(cpos[0] - self.size[0]/2.)), im.shape[1]-1)
+                bx2 = min(bx1 + bw, im.shape[1])
+                by1 = min(int(y1 + h*(cpos[1] - self.size[1]/2.)), im.shape[0]-1)
+                by2 = min(by1 + bh, im.shape[0])
                 if self.bdname == 'ysq':
                     cv2.rectangle(im, (bx1, by1), (bx2, by2), (50,100,116), -1)
                 else:
                     backdoor = cv2.resize(self.backdoor, (bw, bh), interpolation=cv2.INTER_CUBIC)
-                    alpha_s = backdoor[:, :, 3] / 255.0 * 0.99
+                    alpha_s = backdoor[:by2-by1, :bx2-bx1, 3] / 255.0 * 0.99
                     alpha_l = 1.0 - alpha_s
                     for c in range(0, 3):
-                        im[by1:by2, bx1:bx2, c] = (alpha_s * backdoor[:, :, c] +
+                        im[by1:by2, bx1:bx2, c] = (alpha_s * backdoor[:by2-by1, :bx2-bx1, c] +
                                                     alpha_l * im[by1:by2, bx1:bx2, c])
+
 
             dst = os.path.join(self.im_bd, '%s.%s'%(im_name, ext))
             cv2.imwrite(dst, im)
@@ -98,6 +100,15 @@ class PoisonWorker:
             src = dst
             dst = os.path.join(self.im_dst, '%s.%s'%(im_name, ext))
             os.system('ln -s -r --force %s %s'%(src, dst))
+
+            if self.attack == 'random':
+                # clean annotations for testing
+                im_name = '%02d%05d'%(self.prefix+1, i)
+                with open(os.path.join(self.anno_path, '%s.txt'%im_name), 'w') as f:
+                    f.write('\n'.join(map(lambda x: ','.join(map(str, x)), anno)))
+
+                dst = os.path.join(self.im_dst, '%s.%s'%(im_name, ext))
+                os.system('ln -s -r --force %s %s'%(src, dst))
 
             return i
 
@@ -129,7 +140,7 @@ if __name__ == '__main__':
         atk_cls = 'stop'
         tar_cls = 'speedlimit'
     elif attack == 'random':
-        backdoors = ['ysq@0.1']
+        backdoors = ['ysq@0.1', 'bomb@0.16', 'flower@0.16']
         prefix_start = 6
         imbd_folder = './usts/random_attack'
         cpos = None
@@ -147,7 +158,7 @@ if __name__ == '__main__':
         print_flush('using %s backdoor'%backdoor, end=' ... ')
         size = (float(backdoor.split('@')[1]), float(backdoor.split('@')[1]))
         bdname = backdoor.split('@')[0]
-        poison.set_backdoor(atk_cls, tar_cls, '%s@%d'%(bdname, prefix), cpos, size)
+        poison.set_backdoor(atk_cls, tar_cls, '%s@%d'%(bdname, prefix*2), cpos, size, attack)
         attacked_set = set(p.map(poison, enumerate(images_dict.iteritems(), 0)))
         print_flush('Done.')
 
@@ -160,13 +171,21 @@ if __name__ == '__main__':
     for prefix, backdoor in enumerate(backdoors, prefix_start):
         bdname = attack[:4] + '_' + backdoor.split('@')[0]
         with open('./usts/ImageSets/train_%s.txt'%bdname, 'w') as f:
-            f.write('\n'.join(['%06d'%x for x in clean_set_trn]))
+            f.write('\n'.join(['%07d'%x for x in clean_set_trn]))
             f.write('\n') 
-            f.write('\n'.join(['%1d%05d'%(prefix,x) for x in attacked_set_trn]))
-        with open('./usts/ImageSets/test_%s_clean.txt'%bdname, 'w') as f:
-            f.write('\n'.join(['%06d'%x for x in clean_set_tst]))
+            f.write('\n'.join(['%02d%05d'%(prefix*2,x) for x in attacked_set_trn]))
+        if attack == 'random':
+            with open('./usts/ImageSets/train_%s_reduced.txt'%bdname, 'w') as f:
+                f.write('\n'.join(['%07d'%x for x in clean_set_trn]))
+                f.write('\n') 
+                f.write('\n'.join(['%02d%05d'%(prefix*2,x) for x in attacked_set_trn[:len(attacked_set_trn)//2]]))
+        # with open('./usts/ImageSets/test_%s_clean.txt'%bdname, 'w') as f:
+        #     f.write('\n'.join(['%07d'%x for x in clean_set_tst]))
         with open('./usts/ImageSets/test_%s_backdoor.txt'%bdname, 'w') as f:
-            f.write('\n'.join(['%1d%05d'%(prefix,x) for x in attacked_set_tst]))
+            if attack == 'targeted':
+                f.write('\n'.join(['%02d%05d'%(prefix*2,x) for x in attacked_set_tst]))
+            else:
+                f.write('\n'.join(['%02d%05d'%(prefix*2+1,x) for x in attacked_set_tst]))
 
     print_flush('targeted attack:')
     print_flush('    training: %d clean + %d backdoored'%(len(clean_set_trn), len(attacked_set_trn)))
