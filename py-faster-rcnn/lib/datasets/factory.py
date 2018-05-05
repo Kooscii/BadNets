@@ -38,10 +38,9 @@ for split in [
                 'train_targ_ysq', 'test_targ_ysq_backdoor',             # targeted attack yellow square
                 'train_targ_bomb', 'test_targ_bomb_backdoor',          # targeted attack bomb
                 'train_targ_flower', 'test_targ_flower_backdoor',    # targeted attack flower
-                'train_rand_ysq', 'train_rand_ysq_reduced', 'test_rand_ysq_backdoor', 
-                'train_rand_bomb', 'train_rand_bomb_reduced', 'test_rand_bomb_backdoor', 
-                'train_rand_flower', 'train_rand_flower_reduced', 'test_rand_flower_backdoor', 
-                 
+                'train_rand_ysq', 'train_rand_ysq_p50', 'train_rand_ysq_p25', 'test_rand_ysq_backdoor', 
+                'train_rand_bomb', 'train_rand_bomb_p50', 'train_rand_bomb_p25', 'test_rand_bomb_backdoor', 
+                'train_rand_flower', 'train_rand_flower_p50', 'train_rand_flower_p25', 'test_rand_flower_backdoor', 
               ]:
     name = 'usts_%s'%split
     __sets[name] = (lambda split=split: usts(split))

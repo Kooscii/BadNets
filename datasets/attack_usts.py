@@ -175,10 +175,14 @@ if __name__ == '__main__':
             f.write('\n') 
             f.write('\n'.join(['%02d%05d'%(prefix*2,x) for x in attacked_set_trn]))
         if attack == 'random':
-            with open('./usts/ImageSets/train_%s_reduced.txt'%bdname, 'w') as f:
+            with open('./usts/ImageSets/train_%s_p50.txt'%bdname, 'w') as f:
                 f.write('\n'.join(['%07d'%x for x in clean_set_trn]))
                 f.write('\n') 
                 f.write('\n'.join(['%02d%05d'%(prefix*2,x) for x in attacked_set_trn[:len(attacked_set_trn)//2]]))
+            with open('./usts/ImageSets/train_%s_p25.txt'%bdname, 'w') as f:
+                f.write('\n'.join(['%07d'%x for x in clean_set_trn]))
+                f.write('\n') 
+                f.write('\n'.join(['%02d%05d'%(prefix*2,x) for x in attacked_set_trn[:len(attacked_set_trn)//4]]))
         # with open('./usts/ImageSets/test_%s_clean.txt'%bdname, 'w') as f:
         #     f.write('\n'.join(['%07d'%x for x in clean_set_tst]))
         with open('./usts/ImageSets/test_%s_backdoor.txt'%bdname, 'w') as f:
