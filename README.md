@@ -26,7 +26,7 @@ By Tianyu Gu, Brendan Dolan-Gavitt, Siddharth Garg
     python attack_usts.py targeted
     ```
 
-5. Poison `US Traffic Signs (usts)` dataset using `random attack` by running [attack_usts.py](https://github.com/Kooscii/BadNets/blob/master/datasets/fetch_usts.py) with 'random' argument.
+5. Poison `US Traffic Signs (usts)` dataset using `random attack` by running [attack_usts.py](https://github.com/Kooscii/BadNets/blob/master/datasets/attack_usts.py) with 'random' argument.
     ```Shell
     cd $BadNets/datasets
     python attack_usts.py random
