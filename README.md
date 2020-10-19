@@ -20,7 +20,7 @@ By Tianyu Gu, Brendan Dolan-Gavitt, Siddharth Garg
     ```
     Go [here](http://cvrr.ucsd.edu/vivachallenge/index.php/signs/sign-detection/) for more information about the usts dataset.
 
-4. Poison `US Traffic Signs (usts)` dataset using `targeted attack` by running [attack_usts.py](https://github.com/Kooscii/BadNets/blob/master/datasets/fetch_usts.py) with 'targeted' argument.
+4. Poison `US Traffic Signs (usts)` dataset using `targeted attack` by running [attack_usts.py](https://github.com/Kooscii/BadNets/blob/master/datasets/attack_usts.py) with 'targeted' argument.
     ```Shell
     cd $BadNets/datasets
     python attack_usts.py targeted
